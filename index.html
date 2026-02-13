@@ -57059,6 +57059,21 @@ function mailtoUrl(to, subject, body) {
   return 'mailto:' + encodeURIComponent(to) + '?' + params;
 }
 
+
+function gmailComposeUrl(to, subject, body) {
+  const cc = "d.dimauro@ddm-soluzioni.it";
+  const params = [
+    "view=cm",
+    "fs=1",
+    "to=" + encodeURIComponent(to || ""),
+    "cc=" + encodeURIComponent(cc),
+    "su=" + encodeURIComponent(subject || ""),
+    "body=" + encodeURIComponent(body || "")
+  ].join("&");
+  return "https://mail.google.com/mail/?" + params;
+}
+
+
 function salesSubject(item) {
   return 'Richiesta contatto commerciale - DDM Soluzioni';
 }
@@ -57127,7 +57142,13 @@ document.getElementById('resultsContainer').addEventListener('click', function (
   const subject = btn.getAttribute('data-subject') || '';
   const body = btn.getAttribute('data-body') || '';
 
-  window.location.href = mailtoUrl(to, subject, body);
+  const isDesktop = !/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+  if (isDesktop) {
+    window.open(gmailComposeUrl(to, subject, body), "_blank", "noopener");
+  } else {
+    window.location.href = mailtoUrl(to, subject, body);
+  }
 });
 
 

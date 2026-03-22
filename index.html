@@ -57081,27 +57081,26 @@ function salesSubject(item) {
 function salesBody(item) {
   return `Buongiorno,
 
-mi chiamo Daniele Di Mauro della DDM Soluzioni di Vicenza, lavoriamo con aziende come la Vostra nel settore dell'efficientamento energetico.
+mi chiamo Daniele Di Mauro della DDM Soluzioni di Vicenza, lavoriamo con aziende come la Vostra per ottimizzare le spese energetiche partendo dalla rinegoziazione dei contratti luce e gas ed arrivando anche a valutare anche l'installazione di un impianto fotovoltaico a noleggio o in acquisto.
+La consulenza, lo scrivo subito, è completamente gratuita per le aziende!
 
-La nostra proposta è semplice: impianto fotovoltaico con formula a noleggio operativo, senza alcun investimento iniziale da parte Vostra.
+La nostra proposta è semplice: 
+- analisi delle bollette luce e gas attuali, verifica dei contratti, valutazione se nel mercato esistono condizioni migliori;
+- con le bollette alla mano e visti i consumi, possiamo anche valutare l'installazione di un impianto fotovoltaico anche a noleggio operativo con riscatto (senza esborso iniziale).
 
-In pratica:
+Possiamo anche rinegoziare i contratti di luce e gas e fermarci qui al momento, nessuna preclusione.
+
+Ci è sufficiente un appuntamento presso la Vostra sede di circa 30 min e possiamo capire se possiamo abbassare le spese!
+Il mio numero è: 334 639 5727
+
+Altri dettagli sull'impianto fotovoltaico a noleggio:
 - Non pagate nulla per l'installazione
 - Pagate un canone mensile fisso che stabiliamo assieme in base ai vs consumi
 - Prima rata del canone dopo 90 gg dall'installazione
 - Iniziate subito a risparmiare sulla bolletta grazie all'impianto fotovoltaico
 - Dopo pochi anni, alla fine del noleggio, l'impianto può diventare di Vostra proprietà e continuare a produrre energia per voi a costo zero.
 
-Come funziona nella pratica:
-1. Facciamo un sopralluogo gratuito presso la Vostra sede
-2. Analizziamo i Vostri consumi e la copertura disponibile
-3. Vi presentiamo un'offerta personalizzata con numeri chiari
-4. Se Vi interessa, procediamo; altrimenti nessun problema
-
 Se siete proprietari dell'immobile o anche se siete in affitto, ma con approvazione del proprietario dell'immobile, un impianto fotovoltaico è sicuramente una soluzione interessante per la Vostra azienda.
-
-Ci è sufficiente un appuntamento presso la Vostra sede, per realizzarvi un preventivo personalizzato sui vs consumi e sulla vs copertura.
-Il mio numero è: 334 639 5727
 
 Resto a disposizione per qualsiasi chiarimento o domanda e per fissare un incontro a partire dalla settimana prossima.
 
@@ -57418,5 +57417,63 @@ loadSearchState();
   };
 })();
 </script>
+<script>
+  // Script autonomo per filtrare le SRL e SPA
+  const targetHeader = document.querySelector('.header-top div:nth-child(2)');
+  if (targetHeader && !document.getElementById('excludeSrlBtn')) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'toggle-tags-btn';
+    btn.id = 'excludeSrlBtn';
+    btn.innerText = 'Escludi Srl/Spa';
+    targetHeader.appendChild(btn);
 
+    window.excludeStructured = false;
+
+    // Observer: controlla se la pagina crea nuove card e le nasconde al volo se il filtro è attivo
+    const observer = new MutationObserver(() => {
+      if (window.excludeStructured) {
+        document.querySelectorAll('.card:not(.checked-srl)').forEach(card => {
+          card.classList.add('checked-srl');
+          const nameEl = card.querySelector('.company-name');
+          if (nameEl) {
+            const n = nameEl.innerText.toLowerCase();
+            if (n.includes('srl') || n.includes('s.r.l') || n.includes('spa') || n.includes('s.p.a')) {
+              card.style.display = 'none';
+              card.classList.add('is-structured');
+            }
+          }
+        });
+      }
+    });
+
+    const container = document.getElementById('resultsContainer');
+    if(container) observer.observe(container, { childList: true, subtree: true });
+
+    // Azione al click del bottone
+    btn.addEventListener('click', () => {
+      window.excludeStructured = !window.excludeStructured;
+      btn.innerText = window.excludeStructured ? 'Includi Srl/Spa' : 'Escludi Srl/Spa';
+      btn.style.backgroundColor = window.excludeStructured ? '#ffc9c9' : '';
+      
+      if (window.excludeStructured) {
+         document.querySelectorAll('.card').forEach(card => {
+            const nameEl = card.querySelector('.company-name');
+            if (nameEl) {
+              const n = nameEl.innerText.toLowerCase();
+              if (n.includes('srl') || n.includes('s.r.l') || n.includes('spa') || n.includes('s.p.a')) {
+                card.style.display = 'none';
+                card.classList.add('is-structured');
+              }
+            }
+         });
+      } else {
+         document.querySelectorAll('.is-structured').forEach(card => {
+            card.style.display = '';
+            card.classList.remove('is-structured');
+         });
+      }
+    });
+  }
+</script>
 </body></html>
